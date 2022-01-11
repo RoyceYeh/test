@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Vue component</title>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.14/vue.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			<counter @my-emit="makeSync" :init="count"></counter>
+			<h2 style="color: brown">{{count}} from new Vue()</h2>
+		</div>
+
+		<script>
+			Vue.component("counter", {
+				props: ["init"],
+				template: `
+                <div>
+                    <button @click="count+=1"> Add </button>
+                    <button @click="sync"> Synchronize </button>
+                    <h2 style="color:green;">{{count}} from counter</h2>
+                </div>
+            `,
+				data() {
+					return {
+						count: this.init,
+					};
+				},
+				methods: {
+					sync() {
+						this.$emit("my-emit", this.count);
+					},
+				},
+			});
+			new Vue({
+				el: "#app",
+				data: {
+					count: 0,
+				},
+				methods: {
+					// 2
+					makeSync(count) {
+						this.count = count;
+					},
+				},
+			});
+		</script>
+	</body>
+</html>
